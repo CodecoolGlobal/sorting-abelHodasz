@@ -196,7 +196,7 @@ async function mergeSort(array, left, right) {
 
 //heapsort
 
-function heapify(array, length, i) {
+async function heapify(array, length, i) {
     largest = i;
     left = 2 * i + 1;
     right = 2 * i + 2;
@@ -209,23 +209,31 @@ function heapify(array, length, i) {
     }
 
     if (largest != i) {
+        addColor(barsDOM[i], COLORS.ORANGE);
+        addColor(barsDOM[largest], COLORS.ORANGE);
+        await sleep(SPEED_MAX + SPEED_MIN - animationSpeed);
         switchItems(array, i, largest);
+        removeColor(barsDOM[i]);
+        removeColor(barsDOM[largest]);
         updateBars(array);
-        heapify(array, length, largest);
+        await heapify(array, length, largest);
     }
 }
 
-function heapSort(array) {
+async function heapSort(array) {
     const length = array.length;
 
     for (let i = length; i >= -1; i--) {
-        heapify(array, length, i);
+        await heapify(array, length, i);
     }
 
     for (let i = length - 1; i >= 0; i--) {
+        addColor(barsDOM[i], COLORS.GREEN);
         switchItems(array, 0, i);
+        await sleep(SPEED_MAX + SPEED_MIN - animationSpeed);
+        removeColor(barsDOM[i]);
         updateBars(array);
-        heapify(array, i, 0);
+        await heapify(array, i, 0);
     }
 }
 
