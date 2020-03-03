@@ -1,4 +1,4 @@
-const HEIGHT = window.innerHeight / 2;
+let HEIGHT = window.innerHeight / 2;
 const MIN = 25;
 const MAX = 125;
 const SPEED_MIN = 2;
@@ -275,6 +275,10 @@ const main = () => {
         }
         arraySize = newSliderValue;
         updateBars(intArray);
+    });
+
+    window.addEventListener("resize", () => {
+        HEIGHT = window.innerHeight / 2;
     });
 
     SPEED.addEventListener("input", e => {

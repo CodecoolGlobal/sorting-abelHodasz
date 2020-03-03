@@ -87,8 +87,7 @@ html {
       -ms-flex-positive: 1;
           flex-grow: 1;
   height: 200px;
-  margin: 2px;
-  margin-top: auto;
+  margin: auto 2px 0 0;
   background-color: #48c7eb;
 }
 
@@ -142,14 +141,29 @@ input[type="range"]:focus::-webkit-slider-runnable-track {
 }
 
 @media screen and (max-width: 1000px) {
+  #bar-container .bar {
+    margin: auto 1px 0 0;
+  }
   .control-container {
     height: 120px;
+  }
+}
+
+@media screen and (max-width: 840px) {
+  #bar-container .bar {
+    margin: auto 0 0 0;
   }
 }
 
 @media screen and (max-width: 545px) {
   .control-container {
     height: 170px;
+  }
+}
+
+@media screen and (max-width: 455px) {
+  .control-container {
+    height: 220px;
   }
 }
 /*# sourceMappingURL=style.css.map */
