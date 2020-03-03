@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+    <script src="script.js" defer type="text/javascript"></script>
+    <title>Sorting Algorithms</title>
+</head>
+
+<body>
+    <div class="control-container">
+        <span class="control-left">
+            <button class="primary-btn" id="shuffle">Shuffle</button>
+            <span class="size-container">
+                <input type="range" min="25" max="125" value="75" id="size">
+                <label for="size">Array size</label>
+            </span>
+            <span class="speed-container">
+                <input type="range" min="2" max="100" value="40" id="speed">
+                <label for="speed">Animation Speed</label>
+            </span>
+        </span>
+        <span class="control-right">
+            <button class="secondary-btn" id="quick-sort">Quick sort</button>
+            <button class="secondary-btn" id="merge-sort">Merge sort</button>
+            <button class="secondary-btn" id="heap-sort">Heap sort</button>
+            <button class="secondary-btn" id="bubble-sort">Bubble sort</button>
+        </span>
+    </div>
+    <div id="bar-container">
+    </div>
+</body>
+
+</html>
