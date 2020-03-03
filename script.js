@@ -243,10 +243,12 @@ async function bubbleSort(array) {
     length = array.length;
 
     for (let i = 0; i < length; i++) {
+        let changed = false;
         for (let j = 0; j < length - i - 1; j++) {
             addColor(barsDOM[j], COLORS.ORANGE);
 
             if (array[j] > array[j + 1]) {
+                changed = true;
                 addColor(barsDOM[j + 1], COLORS.ORANGE);
                 switchItems(array, j, j + 1);
             }
@@ -255,6 +257,7 @@ async function bubbleSort(array) {
             removeColor(barsDOM[j + 1], COLORS.ORANGE);
             updateBars(array);
         }
+        if (!changed) return;
     }
 }
 
