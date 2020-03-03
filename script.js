@@ -3,6 +3,7 @@ const MIN = 25;
 const BAR_CONTAINER = document.querySelector("#bar-container");
 const SLIDER = document.querySelector("#slider");
 const QUICK_SORT_BUTTON = document.querySelector("#quick-sort");
+let BARS = document.querySelectorAll(".bar");
 
 const COLORS = {
     ORANGE: "#f39c12",
@@ -23,14 +24,18 @@ function removeChild(from, times) {
 }
 
 const updateBars = intArray => {
-    const bars = document.querySelectorAll(".bar");
-    bars.forEach((bar, index) => {
+    BARS = document.querySelectorAll(".bar");
+    BARS.forEach((bar, index) => {
         bar.style.height = intArray[index] + "px";
     });
 };
 
-const color = (element, color) => {
-    element.style.color = color;
+const addColor = (element, color) => {
+    element.style.backgroundColor = color;
+};
+
+const removeColor = element => {
+    element.style.backgroundColor = COLORS.BLUE;
 };
 
 //Utility
@@ -82,17 +87,22 @@ const switchItems = (array, i, j) => {
 async function partition(array, low, high) {
     let index = low - 1;
     const pivot = array[high];
+    addColor(BARS[high], COLORS.GREEN);
 
     for (let i = low; i < high; i++) {
+        addColor(BARS[i], COLORS.ORANGE);
+        await sleep(175 - SLIDER.value);
         if (array[i] <= pivot) {
             index++;
-            await sleep(200 - SLIDER.value);
             switchItems(array, index, i);
             updateBars(array);
+            removeColor(BARS[index]);
         }
+        removeColor(BARS[i]);
     }
 
     switchItems(array, index + 1, high);
+    removeColor(BARS[high]);
     return index + 1;
 }
 
@@ -100,8 +110,8 @@ async function quickSort(array, low, high) {
     if (low < high) {
         partitionIndex = await partition(array, low, high);
 
-        quickSort(array, low, partitionIndex - 1);
-        quickSort(array, partitionIndex + 1, high);
+        await quickSort(array, low, partitionIndex - 1);
+        await quickSort(array, partitionIndex + 1, high);
     }
 }
 
