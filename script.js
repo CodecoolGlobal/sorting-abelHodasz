@@ -23,16 +23,16 @@ const COLORS = {
 };
 //Dom manipulation
 
-function addChild(to, what, times) {
+const addChild = (to, what, times) => {
     for (let i = 0; i < times; i++) {
         to.appendChild(what.cloneNode(true));
     }
-}
-function removeChild(from, times) {
+};
+const removeChild = (from, times) => {
     for (let i = 0; i < times; i++) {
         from.removeChild(from.lastChild);
     }
-}
+};
 
 const updateBars = intArray => {
     barsDOM = document.querySelectorAll(".bar");
@@ -57,11 +57,11 @@ const mapRange = function(n, start1, stop1, start2, stop2) {
     return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
 };
 
-function getRandomMappedNumber(min, max, minMap, maxMap) {
+const getRandomMappedNumber = (min, max, minMap, maxMap) => {
     const randomNum = Math.floor(Math.random() * max) + min;
     const randomNumMapped = mapRange(randomNum, min, max, minMap, maxMap);
     return randomNumMapped;
-}
+};
 
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -69,15 +69,15 @@ const sleep = ms => {
 
 //Array manipulation
 
-function shuffle(array) {
+const shuffle = array => {
     array.sort(() => Math.random() - 0.5);
-}
+};
 
-function randomIntArray(length) {
+const randomIntArray = length => {
     return Array.from({ length }, () => {
         return getRandomMappedNumber(0, length, MIN, HEIGHT);
     });
-}
+};
 
 const addRandomNumberTimes = (intArray, times, max) => {
     for (let i = 0; i < times; i++) {
@@ -101,7 +101,7 @@ const switchItems = (array, i, j) => {
 //SORTING ALGORITHMS
 
 //quicksort
-async function partition(array, low, high) {
+const partition = async (array, low, high) => {
     let index = low - 1;
     const pivot = array[high];
     addColor(barsDOM[high], COLORS.GREEN);
@@ -121,19 +121,19 @@ async function partition(array, low, high) {
     switchItems(array, index + 1, high);
     removeColor(barsDOM[high]);
     return index + 1;
-}
+};
 
-async function quickSort(array, low, high) {
+const quickSort = async (array, low, high) => {
     if (low < high) {
         partitionIndex = await partition(array, low, high);
 
         await quickSort(array, low, partitionIndex - 1);
         await quickSort(array, partitionIndex + 1, high);
     }
-}
+};
 
 //mergesort
-async function merge(array, left, middle, right) {
+const merge = async (array, left, middle, right) => {
     array1size = middle - left + 1;
     array2size = right - middle;
 
@@ -181,9 +181,9 @@ async function merge(array, left, middle, right) {
         j++;
         k++;
     }
-}
+};
 
-async function mergeSort(array, left, right) {
+const mergeSort = async (array, left, right) => {
     if (left < right) {
         const middle = Math.floor((left + right) / 2);
 
@@ -192,11 +192,11 @@ async function mergeSort(array, left, right) {
 
         await merge(array, left, middle, right);
     }
-}
+};
 
 //heapsort
 
-async function heapify(array, length, i) {
+const heapify = async (array, length, i) => {
     largest = i;
     left = 2 * i + 1;
     right = 2 * i + 2;
@@ -218,9 +218,9 @@ async function heapify(array, length, i) {
         updateBars(array);
         await heapify(array, length, largest);
     }
-}
+};
 
-async function heapSort(array) {
+const heapSort = async array => {
     const length = array.length;
 
     for (let i = length; i >= -1; i--) {
@@ -235,11 +235,11 @@ async function heapSort(array) {
         updateBars(array);
         await heapify(array, i, 0);
     }
-}
+};
 
 //bubblesort
 
-async function bubbleSort(array) {
+const bubbleSort = async array => {
     length = array.length;
 
     for (let i = 0; i < length; i++) {
@@ -259,7 +259,7 @@ async function bubbleSort(array) {
         }
         if (!changed) return;
     }
-}
+};
 
 //main
 
