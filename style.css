@@ -11,6 +11,10 @@ html {
   background-color: white;
 }
 
+body {
+  min-width: 300px;
+}
+
 .github-link {
   position: fixed;
   left: 20px;
