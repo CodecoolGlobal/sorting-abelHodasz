@@ -1,10 +1,21 @@
 const HEIGHT = window.innerHeight / 2;
 const MIN = 25;
-const BAR_CONTAINER = document.querySelector("#bar-container");
-const SLIDER = document.querySelector("#slider");
-const QUICK_SORT_BUTTON = document.querySelector("#quick-sort");
-let BARS = document.querySelectorAll(".bar");
+const MAX = 125;
+const SPEED_MIN = 2;
+const SPEED_MAX = 100;
 
+const barContainerDOM = document.querySelector("#bar-container");
+const SIZE = document.querySelector("#size");
+const SPEED = document.querySelector("#speed");
+const quickSortButtonDOM = document.querySelector("#quick-sort");
+const mergeSortButtonDOM = document.querySelector("#merge-sort");
+const heapSortButtonDOM = document.querySelector("#heap-sort");
+const bubbleSortButtonDOM = document.querySelector("#bubble-sort");
+const shuffleButtonDOM = document.querySelector("#shuffle");
+let barsDOM = document.querySelectorAll(".bar");
+
+let animationSpeed = SPEED.value;
+let arraySize = SIZE.value;
 const COLORS = {
     ORANGE: "#f39c12",
     BLUE: "#48c7eb",
@@ -24,8 +35,8 @@ function removeChild(from, times) {
 }
 
 const updateBars = intArray => {
-    BARS = document.querySelectorAll(".bar");
-    BARS.forEach((bar, index) => {
+    barsDOM = document.querySelectorAll(".bar");
+    barsDOM.forEach((bar, index) => {
         bar.style.height = intArray[index] + "px";
     });
 };
@@ -37,6 +48,8 @@ const addColor = (element, color) => {
 const removeColor = element => {
     element.style.backgroundColor = COLORS.BLUE;
 };
+
+const disableControls = () => {};
 
 //Utility
 
@@ -56,6 +69,10 @@ const sleep = ms => {
 
 //Array manipulation
 
+function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+}
+
 function randomIntArray(length) {
     return Array.from({ length }, () => {
         return getRandomMappedNumber(0, length, MIN, HEIGHT);
@@ -69,13 +86,11 @@ const addRandomNumberTimes = (intArray, times, max) => {
     }
 };
 
-const removeFromEnd = (intArray, times) => {
+const removeFromEnd = (array, times) => {
     for (let i = 0; i < times; i++) {
-        intArray.pop();
+        array.pop();
     }
 };
-
-//SORTING ALGORITHMS
 
 const switchItems = (array, i, j) => {
     const temp = array[i];
@@ -83,26 +98,28 @@ const switchItems = (array, i, j) => {
     array[j] = temp;
 };
 
+//SORTING ALGORITHMS
+
 //quicksort
 async function partition(array, low, high) {
     let index = low - 1;
     const pivot = array[high];
-    addColor(BARS[high], COLORS.GREEN);
+    addColor(barsDOM[high], COLORS.GREEN);
 
     for (let i = low; i < high; i++) {
-        addColor(BARS[i], COLORS.ORANGE);
-        await sleep(175 - SLIDER.value);
+        addColor(barsDOM[i], COLORS.ORANGE);
+        await sleep(SPEED_MAX + SPEED_MIN - animationSpeed);
         if (array[i] <= pivot) {
             index++;
             switchItems(array, index, i);
             updateBars(array);
-            removeColor(BARS[index]);
+            removeColor(barsDOM[index]);
         }
-        removeColor(BARS[i]);
+        removeColor(barsDOM[i]);
     }
 
     switchItems(array, index + 1, high);
-    removeColor(BARS[high]);
+    removeColor(barsDOM[high]);
     return index + 1;
 }
 
@@ -116,6 +133,122 @@ async function quickSort(array, low, high) {
 }
 
 //mergesort
+async function merge(array, left, middle, right) {
+    array1size = middle - left + 1;
+    array2size = right - middle;
+
+    let leftTemp, rightTemp;
+
+    leftTemp = array.slice(left, left + array1size);
+    rightTemp = array.slice(middle + 1, middle + 1 + array2size);
+
+    let i = 0,
+        j = 0;
+
+    let k = left;
+    while (i < array1size && j < array2size) {
+        addColor(barsDOM[k], COLORS.ORANGE);
+        await sleep(SPEED_MAX + SPEED_MIN - animationSpeed);
+        if (leftTemp[i] <= rightTemp[j]) {
+            array[k] = leftTemp[i];
+
+            i++;
+        } else {
+            array[k] = rightTemp[j];
+            j++;
+        }
+        updateBars(array);
+        removeColor(barsDOM[k]);
+        k++;
+    }
+
+    while (i < array1size) {
+        addColor(barsDOM[k], COLORS.ORANGE);
+        await sleep(SPEED_MAX + SPEED_MIN - animationSpeed);
+        array[k] = leftTemp[i];
+        updateBars(array);
+        removeColor(barsDOM[k]);
+        i++;
+        k++;
+    }
+
+    while (k < array2size) {
+        addColor(barsDOM[k], COLORS.ORANGE);
+        await sleep(SPEED_MAX + SPEED_MIN - animationSpeed);
+        array[k] = rightTemp[i];
+        updateBars(array);
+        removeColor(barsDOM[k]);
+        j++;
+        k++;
+    }
+}
+
+async function mergeSort(array, left, right) {
+    if (left < right) {
+        const middle = Math.floor((left + right) / 2);
+
+        await mergeSort(array, left, middle);
+        await mergeSort(array, middle + 1, right);
+
+        await merge(array, left, middle, right);
+    }
+}
+
+//heapsort
+
+function heapify(array, length, i) {
+    largest = i;
+    left = 2 * i + 1;
+    right = 2 * i + 2;
+
+    if (left < length && array[largest] < array[left]) {
+        largest = left;
+    }
+    if (right < length && array[largest] < array[right]) {
+        largest = right;
+    }
+
+    if (largest != i) {
+        switchItems(array, i, largest);
+        updateBars(array);
+        heapify(array, length, largest);
+    }
+}
+
+function heapSort(array) {
+    const length = array.length;
+
+    for (let i = length; i >= -1; i--) {
+        heapify(array, length, i);
+    }
+
+    for (let i = length - 1; i >= 0; i--) {
+        switchItems(array, 0, i);
+        updateBars(array);
+        heapify(array, i, 0);
+    }
+}
+
+//bubblesort
+
+async function bubbleSort(array) {
+    length = array.length;
+
+    for (let i = 0; i < length; i++) {
+        for (let j = 0; j < length - i - 1; j++) {
+            addColor(barsDOM[j], COLORS.ORANGE);
+
+            if (array[j] > array[j + 1]) {
+                addColor(barsDOM[j + 1], COLORS.ORANGE);
+                switchItems(array, j, j + 1);
+            }
+            await sleep(SPEED_MAX + SPEED_MIN - animationSpeed);
+            removeColor(barsDOM[j], COLORS.ORANGE);
+            removeColor(barsDOM[j + 1], COLORS.ORANGE);
+            updateBars(array);
+        }
+    }
+}
 
 //main
 
@@ -123,31 +256,54 @@ const main = () => {
     const bar = document.createElement("span");
     bar.classList.add("bar");
 
-    let sliderValue = SLIDER.value;
+    addChild(barContainerDOM, bar, arraySize);
 
-    addChild(BAR_CONTAINER, bar, sliderValue);
-
-    let intArray = randomIntArray(sliderValue);
+    let intArray = randomIntArray(arraySize);
 
     updateBars(intArray);
 
-    SLIDER.addEventListener("input", () => {
-        const newSliderValue = SLIDER.value;
-        const sliderDifference = newSliderValue - sliderValue;
+    SIZE.addEventListener("input", () => {
+        const newSliderValue = SIZE.value;
+        const sliderDifference = newSliderValue - arraySize;
         if (sliderDifference > 0) {
-            addChild(BAR_CONTAINER, bar, sliderDifference);
+            addChild(barContainerDOM, bar, sliderDifference);
             addRandomNumberTimes(intArray, sliderDifference, newSliderValue);
         }
         if (sliderDifference < 0) {
-            removeChild(BAR_CONTAINER, Math.abs(sliderDifference));
+            removeChild(barContainerDOM, Math.abs(sliderDifference));
             removeFromEnd(intArray, Math.abs(sliderDifference, newSliderValue));
         }
-        sliderValue = newSliderValue;
+        arraySize = newSliderValue;
         updateBars(intArray);
     });
 
-    QUICK_SORT_BUTTON.addEventListener("click", () => {
+    SPEED.addEventListener("input", e => {
+        animationSpeed = SPEED.value;
+    });
+
+    quickSortButtonDOM.addEventListener("click", () => {
         quickSort(intArray, 0, intArray.length - 1);
+        updateBars(intArray);
+    });
+
+    mergeSortButtonDOM.addEventListener("click", () => {
+        mergeSort(intArray, 0, intArray.length - 1);
+        updateBars(intArray);
+    });
+
+    heapSortButtonDOM.addEventListener("click", () => {
+        heapSort(intArray);
+        updateBars(intArray);
+    });
+
+    bubbleSortButtonDOM.addEventListener("click", () => {
+        bubbleSort(intArray);
+        updateBars(intArray);
+    });
+
+    shuffleButtonDOM.addEventListener("click", () => {
+        shuffle(intArray);
+        updateBars(intArray);
     });
 };
 
