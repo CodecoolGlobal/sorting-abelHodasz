@@ -11,6 +11,24 @@ html {
   background-color: white;
 }
 
+.github-link {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  opacity: 0.2;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.github-link .github-logo {
+  width: 30px;
+  height: 30px;
+}
+
+.github-link:hover {
+  opacity: 0.8;
+}
+
 .control-container,
 .control-left,
 .control-right {
@@ -166,6 +184,10 @@ input[type="range"]:focus::-webkit-slider-runnable-track {
 }
 
 @media screen and (max-width: 455px) {
+  .github-link {
+    left: 90%;
+    top: 1%;
+  }
   .control-container {
     height: 220px;
   }
