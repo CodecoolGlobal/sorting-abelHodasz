@@ -48,6 +48,10 @@ html {
   transition: all 0.2s ease;
 }
 
+.control-container button:focus {
+  outline: none;
+}
+
 .control-container .primary-btn {
   background-color: #a4e3f5;
 }
